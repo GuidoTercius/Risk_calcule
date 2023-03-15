@@ -13,7 +13,7 @@ import numpy as np
 import sys
 
 
-plt.style.use('seaborn') 8-deep' and 'tableau-colorblind10'
+plt.style.use('seaborn') 
 
 #############################################################################
 ############################## Metrics of risk ##############################
