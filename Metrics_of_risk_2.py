@@ -11,19 +11,18 @@ from  math import *
 from datetime import datetime,timedelta 
 from matplotlib import dates as mpl_date
 import sys
-# sys.path.insert(0,'/Users/GuidoImpactus/Documents/Python/Python_arquivos_Liga/Learning_PythonGirraf/')
-# import MG2
-plt.style.use('seaborn') # Chossing the style that i will plot the graphics, print(plt.style.available) to know the avaible ones
-#Styles that i like 'classic' , 'fast', 'fivethirtyeight' (is kind of fat), 'ggplot', 'seaborn-v0_8-deep' and 'tableau-colorblind10'
+
+
+plt.style.use('seaborn') 8-deep' and 'tableau-colorblind10'
 
 #############################################################################
 ############################## Metrics of risk ##############################
 #############################################################################
 
 start = "1900-02-06"
-end= "2023-03-13"         ###If you don't put a end he will considerate today!
+end= "2023-03-13"       
 stock = "BEEF3.SA"
-s1=yf.download(stock , start=start )['Adj Close'].ffill()   ### you download the hist of the stock ['Adj Close'] we filter only ['x'] Collumn
+s1=yf.download(stock , start=start )['Adj Close'].ffill()   
 
 
 #############################################################################
@@ -43,25 +42,21 @@ SMm['Average Moving '+ str(M) + ' days']=M_M
 SMm['Average Moving '+ str(S) + ' days']=M_S
 SMm['Price']=s1
 
-# plt.plot(SMm['Average Moving '+ str(L) + ' days'], color='#161925')
-# plt.plot(SMm['Average Moving '+ str(M) + ' days'], color='#628395')
-# plt.plot(SMm['Average Moving '+ str(S) + ' days'],linestyle='--', color='#CBF7ED')
-# plt.plot(SMm['Price'], color='r')
-SMm.plot()
 
+SMm.plot()
 plt.title('Price Change of: ' + stock)
 plt.xlabel('Date')
 plt.ylabel('Price')
-# plt.xticks(rotation=90)
+
 plt.gcf().autofmt_xdate()
 date_format=mpl_date.DateFormatter('%d/%m/%Y')
 plt.gca().xaxis.set_major_formatter(date_format)
 
 plt.legend()
-# plt.grid(False)
 
-plt.tight_layout() ## get the plot in good demintions
-# plt.savefig('a')
+
+plt.tight_layout() 
+
 plt.show()
 
 #############################################################################
@@ -69,19 +64,19 @@ plt.show()
 #############################################################################
 
 
-r1=s1.pct_change()          ### pct_change()calculate the dayli change of the  stock
+r1=s1.pct_change()       
 
-ra= ((s1/s1.iloc[0])-1)     ### tanking (the first price and divinding all the price)-1 we get the acummulate return
-# print(ra[-1])
+ra= ((s1/s1.iloc[0])-1)    
+
 print("The accumulate return is "+str(round(ra[-1]*100,2))+"%")
 
 #############################################################################
-############################# Volatility ################################
+############################# Volatility ####################################
 #############################################################################
 
 
-std=r1.std()                ### .std() calculate the standard deviation of the daily returns
-std_annual= std*sqrt(252)   ### multiplaing by sqrt(252) we get the annual std!
+std=r1.std()                
+std_annual= std*sqrt(252)   
 print("\nThe dayli volatilityis " + str(round(std*100,2)) + "%")
 print("The annual volatilityis " + str(round(std_annual*100,2)) + "%\n")
 
@@ -110,12 +105,10 @@ plt.show()
 ################################# Sharpe ####################################
 #############################################################################
 
-A_R = ((1+ra[-1])**(252/len(ra)))-1  ### [-1]take the last iten from the list **to 252/nummber of days we have the cottation 
+A_R = ((1+ra[-1])**(252/len(ra)))-1   
 Selic=0.1365
 Sharpe= (A_R-Selic)/std_annual
 print('The Sharpe of the stock is: ' + str(Sharpe) + '\n')
-# Sharpe = ra[-1]              ### Sharpe = (annual Return-Selic)/anual volatility
-                               ### Annua_return =  (1 + Return acummulate)**(len(ra)/252)
 
 #############################################################################
 ################################ Correlation ################################
@@ -127,47 +120,33 @@ for Stock in C:
     Wallet[Stock]=yf.download(Stock,start=start)['Adj Close'].ffill()
 cm=Wallet.iloc[:,:2].pct_change().rolling(window=S).corr()
 cr=Wallet.pct_change().corr()
-# sns.heatmap(cr ,  annot=True)
+sns.heatmap(cr ,  annot=True)
 
-### Take in out the 1 of the correlation!
 cm=pd.DataFrame(cm)
 t=0.001
 cm=cm.mask(np.abs(cm-1)<t)
 cm=cm[stock].dropna()
-
-### Getting a x axis for date
 cm=pd.DataFrame(cm)
 x=cm.copy()
 
 x.reset_index(inplace=True)
 x['Date']=pd.to_datetime(x['Date'])
 x=x['Date']
-
-
 plt.plot_date(x,cm,label=(str(C[0])+' & '+str(C[1])+' '+str(S)+' days window'),linestyle='solid',color='k',marker='')
-
 plt.xlabel('Date')
 plt.ylabel('Correlation')
 plt.title('Correlation Graph')
-# plt.xticks(rotation=90)
 plt.legend()
-plt.gcf().autofmt_xdate() ## it format the date in x axis!
-# date_format=mpl_date.DateFormatter('%Y/%m/%d')
-# plt.gca().xaxis.set_major_formatter(date_format)
-
+plt.gcf().autofmt_xdate()
 plt.tight_layout()
-# plt.savefig("2")
-
 plt.show()
 
 #############################################################################
 ################################ Beta #######################################
 #############################################################################
 
-
 Wallet_r=Wallet.pct_change().dropna()
-
-Beta=(Wallet_r[str(C[1])].cov(Wallet_r[str(C[0])]))/(Wallet_r[str(C[0])].var()) ### covariation betwen Sotck and Bench / by variation of the Bench
+Beta=(Wallet_r[str(C[1])].cov(Wallet_r[str(C[0])]))/(Wallet_r[str(C[0])].var()) 
 print('\nThe beta of '+str(C[1])+' is ' + str(round(Beta,2))+'\n')
 
 #############################################################################
@@ -192,14 +171,14 @@ df = pd.DataFrame(
 }
 
 )
-# print(df)
+
 df.plot.bar()
 plt.title(str(C[0])+'  &  '+str(C[1]) +' VaR')
 plt.xlabel('VaR 1%-10%')
 plt.ylabel('Maximum lost')
 plt.gcf().autofmt_xdate()
 plt.tight_layout()
-# plt.savefig('3')
+
 plt.show()
 
 
@@ -212,12 +191,9 @@ plt.xlabel('VaR 1%-10%')
 plt.ylabel('Maximum lost')
 plt.xticks([0,1,2])
 plt.gcf().autofmt_xdate()
-
-
 plt.tight_layout()
-# plt.savefig('4')
 plt.show()
-# get the quantile (element , what quantile)0.01 = 1% chance of return in a day
+
 
 ##############################################################################
 ########################## Maximum draw down #################################
@@ -231,27 +207,10 @@ plt.title(f'Maximum Draw Down {stock}')
 plt.ylabel('Maximum lost')
 plt.xlabel('Date')
 plt.tight_layout()
-
 plt.gcf().autofmt_xdate()
 date_format=mpl_date.DateFormatter('%d/%m/%Y')
 plt.gca().xaxis.set_major_formatter(date_format)
-# plt.savefig('5')
 plt.show()
-# MDD2=pd.DataFrame()
-# for Stock in C:
-#     MDD2[Stock]= ((((yf.download(Stock,start=start)['Adj Close']).dropna())-((yf.download(Stock,start=start)['Adj Close'].dropna()).max()))/((yf.download(Stock,start=start)['Adj Close']).dropna()).max()).min()
-# print(MDD2)
-# for Stock in C:
-#     AC=yf.download(Stock, start=start)
-#     maximum_drawdown= (AC - AC.max())/AC.max()
-#     MDD2[Stock]= maximum_drawdown
-# print(MDD2)
-# MDD2.plot()
-# plt.title('Maximum Draw Down')
-# plt.ylabel('Maximum lost')
-# plt.xlabel('Date')
-# plt.tight_layout()
-# plt.show()
 
 
 #############################################################################
@@ -260,9 +219,9 @@ plt.show()
 
 Normalize_return=pd.DataFrame()
 
-for collum in Wallet:                                                      ### utilazing a Looping to passe the diferent stocks to a DataFrame
-    Normalize_return[collum] =(Wallet[collum].ffill()/Wallet[collum].ffill().iloc[0])*100  ### Dividing the collum by her first item!
-    
+for collum in Wallet:                                                    
+    Normalize_return[collum] =(Wallet[collum].ffill()/Wallet[collum].ffill().iloc[0])*100  
+
 Normalize_return.plot()
 plt.title("Normalize Return")
 plt.ylabel('Price Normalized')
@@ -270,14 +229,10 @@ plt.xlabel('Date')
 plt.gcf().autofmt_xdate()
 date_format=mpl_date.DateFormatter('%d/%m/%Y')
 plt.gca().xaxis.set_major_formatter(date_format)
-
 plt.tight_layout()
-# plt.savefig('6')
 plt.show()  
 
-
-
-rnb = (Wallet[str(C[0])]/Wallet[str(C[0])][0])*100 #Dividing be it self and multiplying by 100 you get the normalize return
+rnb = (Wallet[str(C[0])]/Wallet[str(C[0])][0])*100 
 rns = (Wallet[str(C[1])]/Wallet[str(C[1])][0])*100
 RN = pd.DataFrame()
 RN[str(C[1])]=(rns) 
@@ -289,8 +244,5 @@ plt.xlabel('Date')
 plt.gcf().autofmt_xdate()
 date_format=mpl_date.DateFormatter('%d/%m/%Y')
 plt.gca().xaxis.set_major_formatter(date_format)
-
 plt.tight_layout()
-# plt.savefig('7')
 plt.show()  
-sys.exit()
