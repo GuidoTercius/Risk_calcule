@@ -244,5 +244,7 @@ plt.xlabel('Date')
 plt.gcf().autofmt_xdate()
 date_format=mpl_date.DateFormatter('%d/%m/%Y')
 plt.gca().xaxis.set_major_formatter(date_format)
+
 plt.tight_layout()
 plt.show()  
+sys.exit()
