@@ -120,7 +120,9 @@ for Stock in C:
     Wallet[Stock]=yf.download(Stock,start=start)['Adj Close'].ffill()
 cm=Wallet.iloc[:,:2].pct_change().rolling(window=S).corr()
 cr=Wallet.pct_change().corr()
+
 sns.heatmap(cr ,  annot=True)
+plt.show()
 
 cm=pd.DataFrame(cm)
 t=0.001
