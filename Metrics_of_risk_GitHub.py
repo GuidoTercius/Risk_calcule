@@ -60,7 +60,7 @@ plt.tight_layout()
 plt.show()
 
 #############################################################################
-##################### Dayli and accumulate return ###########################
+##################### Daily and accumulate return ###########################
 #############################################################################
 
 
@@ -77,7 +77,7 @@ print("The accumulate return is "+str(round(ra[-1]*100,2))+"%")
 
 std=r1.std()                
 std_annual= std*sqrt(252)   
-print("\nThe dayli volatilityis " + str(round(std*100,2)) + "%")
+print("\nThe daily volatilityis " + str(round(std*100,2)) + "%")
 print("The annual volatilityis " + str(round(std_annual*100,2)) + "%\n")
 
 
