@@ -10,6 +10,7 @@ import seaborn as sns
 import pandas as pd
 from  math import *
 import numpy as np
+import datetime
 import sys
 
 
@@ -19,8 +20,8 @@ plt.style.use('seaborn')
 ############################## Metrics of risk ##############################
 #############################################################################
 
-start = "1900-02-06"
-end= "2023-03-13"       
+start = "2023-03-05"
+end= datetime.datetime.today()      
 stock = "BEEF3.SA"
 s1=yf.download(stock , start=start )['Adj Close'].ffill()   
 
@@ -43,7 +44,7 @@ SMm['Average Moving '+ str(S) + ' days']=M_S
 SMm['Price']=s1
 
 
-SMm.plot()
+plt.plot(SMm)
 plt.title('Price Change of: ' + stock)
 plt.xlabel('Date')
 plt.ylabel('Price')
@@ -56,7 +57,7 @@ plt.legend()
 
 
 plt.tight_layout() 
-
+plt.savefig('1')
 plt.show()
 
 #############################################################################
@@ -90,7 +91,7 @@ Vol_window['Short ' + str(S)+ ' days']=vms
 Vol_window['Medium ' + str(M)+ ' days']=vmm
 Vol_window['Long ' + str(L)+ ' days']=vml
 
-Vol_window.plot()
+plt.plot(Vol_window)
 plt.title(f'Movel Volatility of {stock}')
 plt.xlabel('Date')
 plt.ylabel('Volatility')
@@ -98,7 +99,7 @@ plt.gcf().autofmt_xdate()
 date_format=mpl_date.DateFormatter('%d/%m/%Y')
 plt.gca().xaxis.set_major_formatter(date_format)
 plt.tight_layout()
-# plt.savefig('1')
+plt.savefig('2')
 plt.show()
 
 #############################################################################
@@ -118,7 +119,7 @@ C = [str(stock),'^BVSP',"IEF",'^GSPC','BRL=X','EURBRL=X']
 Wallet = pd.DataFrame()
 for Stock in C:
     Wallet[Stock]=yf.download(Stock,start=start)['Adj Close'].ffill()
-cm=Wallet.iloc[:,:2].pct_change().rolling(window=S).corr()
+cm=Wallet.iloc[:,:2].pct_change().rolling(window=M).corr()
 cr=Wallet.pct_change().corr()
 
 sns.heatmap(cr ,  annot=True)
@@ -127,7 +128,7 @@ plt.show()
 cm=pd.DataFrame(cm)
 t=0.001
 cm=cm.mask(np.abs(cm-1)<t)
-cm=cm[stock].dropna()
+cm=cm[str(stock)].dropna()
 cm=pd.DataFrame(cm)
 x=cm.copy()
 
@@ -204,7 +205,7 @@ plt.show()
 ra=(s1/s1.iloc[0])-1
 MDD=(s1-s1.cummax())/s1.cummax()
 print(f'{MDD.min():.2f}%')
-MDD.plot(color='k')
+plt.plot(MDD,color='k')
 plt.title(f'Maximum Draw Down {stock}')
 plt.ylabel('Maximum lost')
 plt.xlabel('Date')
@@ -224,7 +225,7 @@ Normalize_return=pd.DataFrame()
 for collum in Wallet:                                                    
     Normalize_return[collum] =(Wallet[collum].ffill()/Wallet[collum].ffill().iloc[0])*100  
 
-Normalize_return.plot()
+plt.plot(Normalize_return)
 plt.title("Normalize Return")
 plt.ylabel('Price Normalized')
 plt.xlabel('Date')
@@ -239,7 +240,7 @@ rns = (Wallet[str(C[1])]/Wallet[str(C[1])][0])*100
 RN = pd.DataFrame()
 RN[str(C[1])]=(rns) 
 RN[str(C[0])] =(rnb)  
-RN.plot()
+plt.plot(RN)
 plt.title("Normalize Return")
 plt.ylabel('Price Normalized')
 plt.xlabel('Date')
@@ -249,4 +250,3 @@ plt.gca().xaxis.set_major_formatter(date_format)
 
 plt.tight_layout()
 plt.show()  
-sys.exit()
